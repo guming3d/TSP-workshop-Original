@@ -51,3 +51,32 @@ class LocalOptmizationHeuristics(BaseAlgorithm):
 
     node_insertion = partialmethod(substring_insertion, 1)
     edge_insertion = partialmethod(substring_insertion, 2)
+    
+    ## 3-opt
+    def opt3(self):
+        '''
+        Don't change anything here!
+        '''
+        tours = self._custom_algorithm()
+        lengths = [self.compute_length(tour) for tour in tours]
+        return [self.format_solution(step) for step in tours], lengths
+    
+    
+    def _custom_algorithm(self):
+        '''
+        Please implement the algorithm here
+        
+        - generate a random route:
+            `solution = self.generate_solution()`
+        
+        - get the distance between the two cities:
+            `dist = self.distances[A][B]`
+            
+        - get route length:
+            `length = self.compute_length(tour)`
+        '''
+        tours = []
+        
+        return tours
+    
+    
