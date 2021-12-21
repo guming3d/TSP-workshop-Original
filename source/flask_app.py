@@ -20,6 +20,8 @@ from algorithms.pytsp import pyTSP
 from database import db, create_database
 from models import City
 
+from algorithms.qc import qcANN
+
 bp = Blueprint('tsp_app', __name__)
 
 
