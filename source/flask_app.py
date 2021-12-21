@@ -7,7 +7,8 @@ from os.path import abspath, dirname, join, pardir
 from sqlalchemy import exc as sql_exception
 from werkzeug.utils import secure_filename
 from xlrd import open_workbook
-import sys
+import sys, os
+import pickle
 
 sys.dont_write_bytecode = True
 path_app = dirname(abspath(__file__))
@@ -112,6 +113,22 @@ def create_app():
 
 app, socketio, tsp = create_app()
 
+num_cities = len(tsp.cities)
+
+max_city_for_quantum_computing = 10
+
+if not os.path.exists('anneal_task.pkl'):
+    if num_cities <= max_city_for_quantum_computing:
+        # please change to following braket and prefix to your own value
+        s3_bucket = "amazon-braket-f60afaae3244"
+        prefix = "annealer-experiment"
+        s3_folder = (s3_bucket, prefix)
+        anneal_task = qcANN(s3_folder, tsp)
+        pickle.dump(anneal_task.optimize_routes, open('anneal_task.pkl', 'wb'))
+    else:
+        print(
+            f"tsp of cities larger than {max_city_for_quantum_computing}: {num_cities} cities is not supported for quantum application")
+
 
 @socketio.on('genetic_algorithm')
 def genetic_algorithm(data):
@@ -124,4 +141,4 @@ def genetic_algorithm(data):
 
 
 if __name__ == '__main__':
-	socketio.run(app, port=5000, host='0.0.0.0')
+    socketio.run(app, port=5000, host='0.0.0.0')
