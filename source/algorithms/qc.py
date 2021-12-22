@@ -45,12 +45,33 @@ class qcANN():
 
     def solve_tsp(self):
         # TODO: generate data from raw data -> distance matrix -> graph model based on nx
+        distance_matrix = self.get_distance_matrix_v2()
+        # data = pd.DataFrame(distance_matrix)
+        # data = distance_matrix
+        data = None
+
+        # distance matrix -> graph model based on nx
+        # G = nx.from_pandas_adjacency(data)
+        # G = data
+        G = None
 
         # TODO: prepare paramters
+        lagrange = None
+        weight = 'weight'
 
-        # TODO: run the traveling sales man api to get the answer
+        start_city = 0
+        # Hints: find how the lagrange is generated in your notebook
+
+        # run the traveling sales man api to get the answer
+        route_list = traveling_salesperson(G, self.sampler, lagrange=lagrange,
+                                      start=start_city, num_reads=self.num_shots, answer_mode="histogram")
 
         # TODO: find the optimized one and prepare to saving as the local file
+        # Hint: route_list -> self.optimize_routes
+        # min_distance = 999999999
+        # min_route = []
+        # for route in route_list:
+        #     self.total_dist, self.distance_with_return = get_distance(route, data)#
         
         # random generate results for testing
         # print distance
@@ -59,15 +80,15 @@ class qcANN():
         city_num = len(self.cities)
         route_num = 0
         for num in range(route_num):
-            route_anwser = {}
-            route_anwser['route'] = range(1, city_num+1)
-            route_anwser['total_distance'] = 12345
-            route_anwser['total_distance_with_return'] = 12345
-            if route_anwser['total_distance_with_return'] < min_distance:
-                min_distance = route_anwser['total_distance_with_return']
-                min_route = route_anwser['route']
+            route_answer = {}
+            route_answer['route'] = range(1, city_num+1)
+            route_answer['total_distance'] = 12345
+            route_answer['total_distance_with_return'] = 12345
+            if route_answer['total_distance_with_return'] < min_distance:
+                min_distance = route_answer['total_distance_with_return']
+                min_route = route_answer['route']
                 
-            self.optimize_routes.append(route_anwser)
+            self.optimize_routes.append(route_answer)
 
         print(f"min route {min_route} with distance {min_distance}")
 
@@ -131,14 +152,14 @@ class qcANN():
         min_route = []
         for route in route_list:
             self.total_dist, self.distance_with_return = get_distance(route, data)
-            route_anwser = {}
-            route_anwser['route'] = route
-            route_anwser['total_distance'] = self.total_dist
-            route_anwser['total_distance_with_return'] = self.distance_with_return
+            route_answer = {}
+            route_answer['route'] = route
+            route_answer['total_distance'] = self.total_dist
+            route_answer['total_distance_with_return'] = self.distance_with_return
             if self.distance_with_return < min_distance:
                 min_distance = self.distance_with_return
                 min_route = route
             
-            self.optimize_routes.append(route_anwser)
+            self.optimize_routes.append(route_answer)
 
         print(f"min route {min_route} with distance {min_distance}")
